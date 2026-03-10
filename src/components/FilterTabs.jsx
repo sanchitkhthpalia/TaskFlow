@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTasks } from '../context/TaskContext';
 import { ListChecks, Clock, CheckCircle2 } from 'lucide-react';
 
 const FilterTabs = () => {
-    const { filter, setFilter } = useTasks();
+    const { tasks, filter, setFilter } = useTasks();
+
+    // Compute counts dynamically for each category
+    const counts = useMemo(() => ({
+        all: tasks.length,
+        pending: tasks.filter(t => !t.completed).length,
+        completed: tasks.filter(t => t.completed).length
+    }), [tasks]);
 
     const filters = [
-        { id: 'all', label: 'All', icon: ListChecks },
-        { id: 'pending', label: 'Pending', icon: Clock },
-        { id: 'completed', label: 'Done', icon: CheckCircle2 },
+        { id: 'all', label: 'All', icon: ListChecks, count: counts.all },
+        { id: 'pending', label: 'Pending', icon: Clock, count: counts.pending },
+        { id: 'completed', label: 'Done', icon: CheckCircle2, count: counts.completed },
     ];
 
     return (
@@ -40,7 +47,16 @@ const FilterTabs = () => {
                         }}
                     >
                         <Icon size={14} />
-                        {f.label}
+                        <span>{f.label}</span>
+                        <span
+                            style={{
+                                opacity: 0.6,
+                                fontSize: '0.7rem',
+                                marginLeft: '-2px'
+                            }}
+                        >
+                            ({f.count})
+                        </span>
                     </button>
                 );
             })}
