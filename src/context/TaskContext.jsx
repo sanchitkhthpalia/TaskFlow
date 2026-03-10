@@ -58,26 +58,28 @@ export const TaskProvider = ({ children }) => {
     // Handles drag-and-drop reordering logic
     // Ensures reordering works even when a filter is active
     const reorderTasks = useCallback((sourceIdx, destIdx) => {
+        if (sourceIdx === destIdx) return;
+
         setTasks(prev => {
-            const currentView = filter === 'all'
+            // 1. Get the items currently in view
+            const viewItems = filter === 'all'
                 ? [...prev]
                 : prev.filter(t => filter === 'completed' ? t.completed : !t.completed);
 
-            const items = [...prev];
-            const [moved] = currentView.splice(sourceIdx, 1);
+            // 2. Reorder the view items
+            const reorderedView = [...viewItems];
+            const [moved] = reorderedView.splice(sourceIdx, 1);
+            reorderedView.splice(destIdx, 0, moved);
 
-            const actualSourceIdx = prev.findIndex(t => t.id === moved.id);
-            const targetItem = currentView[destIdx];
+            // 3. Map the reordered view items back into the original array
+            // This preserves the relative positions of any items that are currently filtered out
+            let viewItemIdx = 0;
+            return prev.map(task => {
+                const isInView = filter === 'all' ||
+                    (filter === 'completed' ? task.completed : !task.completed);
 
-            // If we move to the very end of a filtered list, we just push it back
-            const actualDestIdx = targetItem
-                ? prev.findIndex(t => t.id === targetItem.id)
-                : prev.length;
-
-            const [removed] = items.splice(actualSourceIdx, 1);
-            items.splice(actualDestIdx, 0, removed);
-
-            return items;
+                return isInView ? reorderedView[viewItemIdx++] : task;
+            });
         });
     }, [setTasks, filter]);
 

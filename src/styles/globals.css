@@ -92,7 +92,7 @@ header {
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
     padding: 24px;
-    transition: var(--transition);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
 /* Hover effect only when NOT dragging (dragged item gets its own styles) */
@@ -100,6 +100,7 @@ header {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
     border-color: var(--primary);
+    transition: transform 0.2s ease-out;
 }
 
 /* Elegant Inputs */
@@ -226,9 +227,15 @@ header {
 /* Critical for Smooth DND */
 .is-dragging {
     transition: none !important;
+    transition-duration: 0ms !important;
     z-index: 9999;
     pointer-events: none;
-    /* Helps avoid triggering other items during drag */
+    cursor: grabbing !important;
+}
+
+/* Ensure no transitions interfere during an active drag session */
+body:has(.is-dragging) .card {
+    transition: none !important;
 }
 
 /* Toast Notifications */
