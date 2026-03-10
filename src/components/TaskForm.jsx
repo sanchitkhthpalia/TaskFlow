@@ -20,6 +20,16 @@ export default function TaskForm() {
         setError(false);
     };
 
+    const handleKeyDown = (e) => {
+        // Clear input on Escape
+        if (e.key === 'Escape') {
+            setText('');
+            setError(false);
+        }
+        // Enter is handled by form onSubmit, but explicit handling can be Added 
+        // if we wanted to prevent default behavior or add secondary logic.
+    };
+
     return (
         <div className="card" style={{ padding: '24px', marginBottom: '32px' }}>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -42,6 +52,7 @@ export default function TaskForm() {
                             setText(e.target.value);
                             if (error) setError(false);
                         }}
+                        onKeyDown={handleKeyDown}
                     />
                     <button
                         type="submit"
