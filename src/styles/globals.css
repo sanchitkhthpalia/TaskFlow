@@ -18,7 +18,7 @@
     --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     --radius: 12px;
     --radius-lg: 16px;
-    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: all 0.3s ease;
     --glass-bg: rgba(255, 255, 255, 0.7);
 }
 
@@ -50,7 +50,7 @@ body {
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.011em;
     line-height: 1.5;
-    transition: background-color 0.4s ease, color 0.4s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     min-height: 100vh;
     /* Centering via margin on container is safer for DND than flex centering on body */
     padding: 60px 20px;
