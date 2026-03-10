@@ -4,13 +4,15 @@ import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import FilterTabs from './components/FilterTabs';
 import ThemeToggle from './components/ThemeToggle';
+import Toast from './components/Toast';
 import { Layout } from 'lucide-react';
 import './styles/globals.css';
 
 const App = () => {
   return (
     <TaskProvider>
-      <div className="dashboard-container animate-slide-up">
+      <div className="dashboard-container">
+        <Toast />
         <header>
           <div className="logo">
             <div style={{ background: 'var(--primary)', color: 'white', padding: '6px', borderRadius: '8px', display: 'flex' }}>

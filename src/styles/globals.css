@@ -231,6 +231,72 @@ header {
     /* Helps avoid triggering other items during drag */
 }
 
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 500;
+    pointer-events: auto;
+}
+
+.toast-success {
+    border-left: 4px solid var(--success);
+}
+
+.toast-success svg {
+    color: var(--success);
+}
+
+.toast-info {
+    border-left: 4px solid var(--primary);
+}
+
+.toast-info svg {
+    color: var(--primary);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
 /* Utilities */
 .text-muted {
     color: var(--text-muted);

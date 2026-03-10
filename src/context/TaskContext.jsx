@@ -13,11 +13,17 @@ export const TaskProvider = ({ children }) => {
     const [tasks, setTasks] = useLocalStorage('tasks-flow-data', []);
     const [filter, setFilter] = useState('all');
     const [theme, setTheme] = useLocalStorage('app-theme', 'light');
+    const [toast, setToast] = useState(null);
 
     // Side effect to sync theme with DOM
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
     }, [theme]);
+
+    const showToast = useCallback((message, type = 'success') => {
+        setToast({ message, type, id: Date.now() });
+        setTimeout(() => setToast(null), 3000);
+    }, []);
 
     const toggleTheme = useCallback(() => {
         setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
@@ -30,17 +36,24 @@ export const TaskProvider = ({ children }) => {
             completed: false,
             createdAt: Date.now()
         }, ...prev]);
-    }, [setTasks]);
+        showToast('Task added successfully!');
+    }, [setTasks, showToast]);
 
     const deleteTask = useCallback((id) => {
         setTasks(prev => prev.filter(t => t.id !== id));
-    }, [setTasks]);
+        showToast('Task deleted.', 'info');
+    }, [setTasks, showToast]);
 
     const toggleTask = useCallback((id) => {
-        setTasks(prev => prev.map(t =>
-            t.id === id ? { ...t, completed: !t.completed } : t
-        ));
-    }, [setTasks]);
+        setTasks(prev => prev.map(t => {
+            if (t.id === id) {
+                const newState = !t.completed;
+                if (newState) showToast('Task completed! 🎉');
+                return { ...t, completed: newState };
+            }
+            return t;
+        }));
+    }, [setTasks, showToast]);
 
     // Handles drag-and-drop reordering logic
     // Ensures reordering works even when a filter is active
@@ -84,8 +97,9 @@ export const TaskProvider = ({ children }) => {
         addTask,
         deleteTask,
         toggleTask,
-        reorderTasks
-    }), [tasks, filteredTasks, filter, theme, toggleTheme, addTask, deleteTask, toggleTask, reorderTasks]);
+        reorderTasks,
+        toast
+    }), [tasks, filteredTasks, filter, theme, toggleTheme, addTask, deleteTask, toggleTask, reorderTasks, toast]);
 
     return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
 };
