@@ -1,0 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+    /* Premium SaaS Color Palette (Light) */
+    --bg-color: #fcfcfd;
+    --bg-gradient: radial-gradient(circle at top left, #f8fafc 0%, #f1f5f9 100%);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --border-color: rgba(226, 232, 240, 0.8);
+    --text-main: #1a1a1b;
+    --text-muted: #6b7280;
+    --primary: #5e5ce6;
+    --primary-hover: #4e4cb6;
+    --accent: #ff3b30;
+    --success: #34c759;
+    --danger: #ff3b30;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    --radius: 12px;
+    --radius-lg: 16px;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme='dark'] {
+    /* Premium SaaS Color Palette (Dark) */
+    --bg-color: #0d0d0e;
+    --bg-gradient: radial-gradient(circle at top left, #141416 0%, #0d0d0e 100%);
+    --card-bg: rgba(22, 22, 23, 0.8);
+    --border-color: rgba(45, 45, 48, 0.8);
+    --text-main: #f5f5f7;
+    --text-muted: #86868b;
+    --primary: #5e5ce6;
+    --primary-hover: #7d7aff;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    --glass-bg: rgba(30, 30, 32, 0.7);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: var(--bg-gradient);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.011em;
+    line-height: 1.5;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    min-height: 100vh;
+    /* Centering via margin on container is safer for DND than flex centering on body */
+    padding: 60px 20px;
+}
+
+#root {
+    width: 100%;
+}
+
+.dashboard-container {
+    max-width: 680px;
+    margin: 0 auto;
+    width: 100%;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Polished Card */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    transition: var(--transition);
+}
+
+/* Hover effect only when NOT dragging (dragged item gets its own styles) */
+.card-hover:not(.is-dragging):hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+/* Elegant Inputs */
+.task-input {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.task-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(94, 92, 230, 0.1);
+}
+
+/* Buttons & Scaling */
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: scale(1.03) translateY(-1px);
+    box-shadow: 0 4px 12px rgba(94, 92, 230, 0.2);
+}
+
+.btn-primary:active {
+    transform: scale(0.97);
+}
+
+/* Trash button micro-interaction */
+.btn-icon {
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+    transform: scale(1.1);
+}
+
+/* Strike-through Animation */
+.completed-text {
+    position: relative;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.completed-text::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1.5px;
+    background: var(--text-muted);
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.completed-text.is-active::after {
+    transform: scaleX(1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        margin-top: 10px;
+    }
+
+    to {
+        opacity: 1;
+        margin-top: 0;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+}
+
+.task-entry {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+.task-exit {
+    animation: slideOut 0.2s ease-in forwards;
+}
+
+/* Critical for Smooth DND */
+.is-dragging {
+    transition: none !important;
+    z-index: 9999;
+    pointer-events: none;
+    /* Helps avoid triggering other items during drag */
+}
+
+/* Utilities */
+.text-muted {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-2 {
+    gap: 8px;
+}
+
+.gap-4 {
+    gap: 16px;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.w-full {
+    width: 100%;
+}
