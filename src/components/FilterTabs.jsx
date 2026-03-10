@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTasks } from '../context/TaskContext';
 import { ListChecks, Clock, CheckCircle2 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 const FilterTabs = () => {
     const { filter, setFilter } = useTasks();
