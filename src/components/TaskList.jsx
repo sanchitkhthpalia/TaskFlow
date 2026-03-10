@@ -2,7 +2,7 @@ import React from 'react';
 import { useTasks } from '../context/TaskContext';
 import TaskItem from './TaskItem';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { ClipboardList } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 export default function TaskList() {
     const { filteredTasks, reorderTasks } = useTasks();
@@ -14,10 +14,27 @@ export default function TaskList() {
 
     if (filteredTasks.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center p-12 text-center opacity-60">
-                <ClipboardList size={40} strokeWidth={1} style={{ marginBottom: '16px' }} />
-                <p className="font-medium">No tasks found</p>
-                <p className="text-sm">Try changing your filter or adding a new task.</p>
+            <div className="flex flex-col items-center justify-center p-16 text-center task-entry" style={{ minHeight: '300px' }}>
+                <div
+                    className="flex items-center justify-center"
+                    style={{
+                        width: '64px',
+                        height: '64px',
+                        borderRadius: '50%',
+                        background: 'var(--border-color)',
+                        color: 'var(--primary)',
+                        marginBottom: '20px',
+                        opacity: 0.8
+                    }}
+                >
+                    <Sparkles size={32} />
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
+                    🎉 No tasks yet
+                </h3>
+                <p className="text-muted" style={{ maxWidth: '240px', lineHeight: 1.6 }}>
+                    Start by adding your first task and stay on top of your goals.
+                </p>
             </div>
         );
     }
