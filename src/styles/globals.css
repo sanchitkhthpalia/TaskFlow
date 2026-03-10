@@ -64,7 +64,8 @@ body {
     max-width: 680px;
     margin: 0 auto;
     width: 100%;
-    animation: fadeIn 0.5s ease-out forwards;
+    /* No transform here - transform on a parent breaks fixed-position DND elements */
+    animation: dashboardFadeIn 0.8s ease-out forwards;
 }
 
 header {
@@ -192,6 +193,16 @@ header {
 }
 
 /* Animations */
+@keyframes dashboardFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 @keyframes taskSlideUp {
     from {
         opacity: 0;
@@ -228,12 +239,19 @@ header {
 .is-dragging {
     transition: none !important;
     transition-duration: 0ms !important;
+    animation: none !important;
+    /* Prevent slide animations from fighting drag position */
     z-index: 9999;
     pointer-events: none;
     cursor: grabbing !important;
 }
 
-/* Ensure no transitions interfere during an active drag session */
+/* Ensure no transitions or transforms on parents interfere during an active drag session */
+body:has(.is-dragging) .dashboard-container {
+    transform: none !important;
+    animation: none !important;
+}
+
 body:has(.is-dragging) .card {
     transition: none !important;
 }
