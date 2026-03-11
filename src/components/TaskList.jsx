@@ -7,7 +7,12 @@ import { Sparkles } from 'lucide-react';
 export default function TaskList() {
     const { filteredTasks, reorderTasks } = useTasks();
 
+    const handleDragStart = () => {
+        document.body.classList.add('is-dragging-active');
+    };
+
     const handleDragEnd = (result) => {
+        document.body.classList.remove('is-dragging-active');
         if (!result.destination) return;
         reorderTasks(result.source.index, result.destination.index);
     };
@@ -40,7 +45,7 @@ export default function TaskList() {
     }
 
     return (
-        <DragDropContext onDragEnd={handleDragEnd}>
+        <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             <Droppable droppableId="main-task-list">
                 {(provided, snapshot) => (
                     <ul
@@ -50,7 +55,6 @@ export default function TaskList() {
                             listStyle: 'none',
                             padding: 0,
                             minHeight: '20px',
-                            transition: 'background 0.2s ease',
                             borderRadius: 'var(--radius)'
                         }}
                     >
