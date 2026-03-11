@@ -42,7 +42,7 @@ export default function TaskForm() {
                     New Task
                 </label>
 
-                <div className="flex gap-4">
+                <div className="flex gap-4 stack-on-mobile">
                     <input
                         type="text"
                         className="task-input"
@@ -57,7 +57,7 @@ export default function TaskForm() {
                     <button
                         type="submit"
                         className="btn-primary scale-on-hover scale-on-click"
-                        style={{ minWidth: '120px', justifyContent: 'center' }}
+                        style={{ justifyContent: 'center' }}
                     >
                         <PlusCircle size={18} />
                         <span>Add Task</span>

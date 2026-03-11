@@ -28,7 +28,7 @@ const App = () => {
 
           <div className="flex justify-between items-center" style={{ marginBottom: '20px' }}>
             <FilterTabs />
-            <div className="text-muted" style={{ fontWeight: 500 }}>
+            <div className="text-muted hidden-mobile" style={{ fontWeight: 500 }}>
               Dashboard
             </div>
           </div>
