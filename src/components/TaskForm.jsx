@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTasks } from '../context/TaskContext';
 import { PlusCircle, AlertCircle } from 'lucide-react';
 
@@ -6,9 +6,26 @@ export default function TaskForm() {
     const [text, setText] = useState('');
     const [error, setError] = useState(false);
     const { addTask } = useTasks();
+    const inputRef = useRef(null);
+
+    // Auto-focus on mount
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, []);
+
+    // Auto-expand textarea as user types
+    const adjustHeight = () => {
+        const textarea = inputRef.current;
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }
+    };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
 
         if (!text.trim()) {
             setError(true);
@@ -18,16 +35,29 @@ export default function TaskForm() {
         addTask(text.trim());
         setText('');
         setError(false);
+        
+        // Keep focus and reset height
+        if (inputRef.current) {
+            inputRef.current.focus();
+            inputRef.current.style.height = 'auto';
+        }
     };
 
     const handleKeyDown = (e) => {
+        // Enter to submit, Shift + Enter for new line
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit();
+        }
+        
         // Clear input on Escape
         if (e.key === 'Escape') {
             setText('');
             setError(false);
+            if (inputRef.current) {
+                inputRef.current.style.height = 'auto';
+            }
         }
-        // Enter is handled by form onSubmit, but explicit handling can be Added 
-        // if we wanted to prevent default behavior or add secondary logic.
     };
 
     return (
@@ -43,21 +73,30 @@ export default function TaskForm() {
                 </label>
 
                 <div className="flex gap-4 stack-on-mobile">
-                    <input
-                        type="text"
+                    <textarea
+                        ref={inputRef}
                         className="task-input"
                         placeholder="Plan something new..."
+                        rows={1}
                         value={text}
                         onChange={(e) => {
                             setText(e.target.value);
+                            adjustHeight();
                             if (error) setError(false);
                         }}
                         onKeyDown={handleKeyDown}
+                        style={{ 
+                            resize: 'none', 
+                            overflow: 'hidden',
+                            minHeight: '48px',
+                            lineHeight: '1.5',
+                            padding: '12px 18px'
+                        }}
                     />
                     <button
                         type="submit"
                         className="btn-primary scale-on-hover scale-on-click"
-                        style={{ justifyContent: 'center' }}
+                        style={{ justifyContent: 'center', height: 'fit-content', alignSelf: 'flex-start' }}
                     >
                         <PlusCircle size={18} />
                         <span>Add Task</span>
