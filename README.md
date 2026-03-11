@@ -1,81 +1,74 @@
 # TaskFlow — Modern React Task Manager
 
-TaskFlow is a premium, SaaS-style task management application built with React and Vite. It combines a minimalist, high-end aesthetic with powerful features like drag-and-drop reordering, persistent state, and a dual-theme system.
+TaskFlow is a premium, SaaS-style task management application built with **React**, **Vite**, and **@dnd-kit**. It combines a high-end, minimalist aesthetic with powerful productivity features designed for a seamless user experience.
 
-![TaskFlow Header](https://via.placeholder.com/800x400?text=TaskFlow+Dashboard+Preview)
+## ✨ Key Features
 
-## 🌟 Features
-
-- **Intuitive Task Management**: Effortlessly add, toggle, and delete tasks.
-- **Drag & Drop Reordering**: Fluid task prioritization using `@hello-pangea/dnd`.
-- **Global State**: Seamless state management via React Context API (no prop drilling).
-- **Persistent Storage**: Automatic syncing with `localStorage` via a custom hook.
-- **Dual-Theme Support**: Sleek Dark and Light modes with persistent user preference.
-- **Premium UI/UX**: SaaS-style card layout, glassmorphism, and responsive design.
-- **Fluid Animations**: Pure CSS transitions and keyframes for high performance.
-- **Optimized Performance**: Leverages `React.memo`, `useCallback`, and `useMemo`.
+- **Premium SaaS UI**: A modern card-based layout with soft shadows, glassmorphism, and a refined color palette.
+- **Real-Time Search**: Instantly find any task or category with high-performance real-time filtering.
+- **Intelligent Sorting**: Organize your day by Newest, Oldest, or Completion status. Manual reordering via drag-and-drop is supported out-of-the-box.
+- **Task Categories**: Built-in "Work", "Personal", and "Learning" categories with color-coded tags and dedicated filtering.
+- **Productivity Dashboard**: A visual progress card that calculates your completion percentages in real-time.
+- **Undo Delete**: Mistakenly removed a task? Restore it instantly with the high-visibility "Undo" action.
+- **Inline Editing**: Double-click any task to edit its text directly with keyboard shortcuts (`Enter` to save, `Escape` to cancel).
+- **Loading Skeletons**: Experience a smooth initial load with premium shimmer animation placeholders.
+- **Modern Drag & Drop**: Buttery-smooth, vertically-stable task prioritization powered by `@dnd-kit`.
+- **Dual-Theme Engine**: Seamless switching between Dark and Light modes with persistent user preference.
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React (Functional Components + Hooks), Vite
-- **State Management**: Context API
+- **Core**: React 19, Vite
+- **Styling**: Vanilla CSS (Custom tokens & Design System)
+- **State Management**: React Context API
 - **Icons**: Lucide React
-- **Animations**: Pure CSS (transitions & keyframes)
-- **Drag & Drop**: `@hello-pangea/dnd`
-- **Typography**: Inter via Google Fonts
+- **Drag & Drop**: @dnd-kit
+- **Typography**: Outfit via Google Fonts
+- **Persistence**: localStorage Sync
 
-## 🏗️ Architecture
-
-TaskFlow follows a modular, component-based architecture designed for scalability and maintainability.
-
-- **State Syncing**: A custom `useLocalStorage` hook acts as a bridge between React state and the browser's persistent storage.
-- **Context Provider**: `TaskContext` centralizes all logic (CRUD, reordering, filtering, theming), providing a clean interface for UI components.
-- **Separation of Concerns**: UI components are kept "dumb" and focused on presentation, while logical operations are abstracted into hooks and context.
-
-## 📂 Folder Structure
+## 📂 Project Structure
 
 ```text
 src/
-├── components/     # UI components (TaskForm, TaskItem, TaskList, etc.)
-├── context/        # TaskContext for global state management
-├── hooks/          # Custom useLocalStorage for persistence
-├── styles/         # Global CSS variables and SaaS theme
-├── App.jsx         # Main application layout and provider wrapping
+├── components/     # Modular UI elements (TaskForm, TaskItem, SearchBar, etc.)
+├── context/        # TaskContext for global state & logic
+├── hooks/          # Custom useLocalStorage for persistent state
+├── styles/         # Central design system (globals.css)
+├── App.jsx         # Layout & Provider integration
 └── main.jsx        # Entry point
 ```
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-
-- Node.js (v18 or higher)
-- npm or yarn
+- Node.js (v18+)
+- npm
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/taskflow.git
+   git clone https://github.com/sanchitkhthpalia/TaskFlowTaskFlow.git
    ```
 
-2. Navigate to the project directory:
+2. **Install dependencies**
    ```bash
-   cd taskflow
-   ```
-
-3. Install dependencies:
-   ```bash
+   cd TaskFlow
    npm install
    ```
 
-4. Start the development server:
+3. **Launch Dev Server**
    ```bash
    npm run dev
    ```
 
-## 📸 Screenshots
+## 🎨 Design Philosophy
 
-| Light Mode | Dark Mode |
-| :---: | :---: |
-| ![Light Mode](https://via.placeholder.com/300x200?text=Light+Mode) | ![Dark Mode](https://via.placeholder.com/300x200?text=Dark+Mode) |
+TaskFlow is designed to "WOW" the user from the first interaction. It uses:
+- **Depth & Hierarchy**: Through the use of soft shadows and nested card logic.
+- **Tactile Feedback**: Interactive elements scale and lift on hover and click.
+- **Performance-First Animations**: All visual feedback is handled via high-performance CSS keyframes.
+
+---
+
+Developed with ❤️ for modern productivity.
 
