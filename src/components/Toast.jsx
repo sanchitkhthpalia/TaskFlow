@@ -11,9 +11,19 @@ const Toast = () => {
 
     return (
         <div className="toast-container">
-            <div className={`toast ${isSuccess ? 'toast-success' : 'toast-info'} task-entry`}>
-                {isSuccess ? <CheckCircle size={18} /> : <Info size={18} />}
-                <span className="toast-message">{toast.message}</span>
+            <div className={`toast ${isSuccess ? 'toast-success' : 'toast-info'} task-entry`} style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {isSuccess ? <CheckCircle size={18} /> : <Info size={18} />}
+                    <span className="toast-message">{toast.message}</span>
+                </div>
+                {toast.onUndo && (
+                    <button 
+                        onClick={toast.onUndo}
+                        className="btn-undo"
+                    >
+                        Undo
+                    </button>
+                )}
             </div>
         </div>
     );

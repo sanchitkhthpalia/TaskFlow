@@ -4,6 +4,9 @@ import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import FilterTabs from './components/FilterTabs';
 import ThemeToggle from './components/ThemeToggle';
+import ProgressStats from './components/ProgressStats';
+import SearchBar from './components/SearchBar';
+import SortSelector from './components/SortSelector';
 import Toast from './components/Toast';
 import { Layout } from 'lucide-react';
 import './styles/globals.css';
@@ -25,12 +28,12 @@ const App = () => {
 
         <main>
           <TaskForm />
+          <ProgressStats />
+          <SearchBar />
 
-          <div className="flex justify-between items-center" style={{ marginBottom: '20px' }}>
+          <div className="flex justify-between items-center stack-on-mobile gap-4" style={{ marginBottom: '20px' }}>
             <FilterTabs />
-            <div className="text-muted hidden-mobile" style={{ fontWeight: 500 }}>
-              Dashboard
-            </div>
+            <SortSelector />
           </div>
 
           <TaskList />

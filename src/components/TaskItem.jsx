@@ -1,12 +1,15 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useRef, useEffect } from 'react';
 import { useTasks } from '../context/TaskContext';
 import { Trash2, GripVertical, CheckCircle, Circle } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 const TaskItem = ({ task }) => {
-    const { toggleTask, deleteTask } = useTasks();
+    const { toggleTask, deleteTask, updateTask } = useTasks();
     const [isRemoving, setIsRemoving] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editText, setEditText] = useState(task.text);
+    const editInputRef = useRef(null);
 
     const {
         attributes,
@@ -15,26 +18,42 @@ const TaskItem = ({ task }) => {
         transform,
         transition,
         isDragging
-    } = useSortable({ id: task.id });
+    } = useSortable({ id: task.id, disabled: isEditing });
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
-        padding: '16px 20px',
-        marginBottom: '12px',
-        userSelect: 'none',
-        zIndex: isDragging ? 999 : 1,
+        zIndex: isDragging ? 999 : (isEditing ? 100 : 1),
         position: 'relative',
-        borderColor: isDragging ? 'var(--primary)' : 'var(--border-color)',
-        boxShadow: isDragging ? 'var(--shadow-lg)' : 'var(--shadow)',
-        background: isDragging ? 'var(--glass-bg)' : 'var(--card-bg)',
         opacity: isDragging ? 0.8 : 1,
     };
 
-    // Smooth delete: allow animation to finish before removing from state
     const handleRemove = () => {
         setIsRemoving(true);
         setTimeout(() => deleteTask(task.id), 200);
+    };
+
+    const handleDoubleClick = () => {
+        setIsEditing(true);
+    };
+
+    const handleSave = () => {
+        if (editText.trim() && editText.trim() !== task.text) {
+            updateTask(task.id, editText.trim());
+        } else {
+            setEditText(task.text);
+        }
+        setIsEditing(false);
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleSave();
+        } else if (e.key === 'Escape') {
+            setEditText(task.text);
+            setIsEditing(false);
+        }
     };
 
     return (
@@ -42,45 +61,65 @@ const TaskItem = ({ task }) => {
             ref={setNodeRef}
             style={style}
             className={`
-                card card-hover task-entry 
+                task-item task-entry 
+                ${task.completed ? 'completed' : ''}
                 ${isRemoving ? 'task-exit' : ''} 
                 ${isDragging ? 'is-dragging' : ''} 
-                flex items-center gap-4
+                ${isEditing ? 'is-editing-item' : ''}
             `}
         >
             {/* Drag handle */}
             <div
                 {...attributes}
                 {...listeners}
-                className="text-muted cursor-grab active:cursor-grabbing hover:text-main transition-colors"
+                className={`text-muted transition-colors ${isEditing ? 'opacity-20 cursor-default' : 'cursor-grab active:cursor-grabbing hover:text-main'}`}
                 style={{ display: 'flex', alignItems: 'center' }}
             >
                 <GripVertical size={18} />
             </div>
 
-            {/* Completion toggle */}
-            <button
-                onClick={() => toggleTask(task.id)}
-                className={`flex items-center justify-center scale-on-hover scale-on-click ${task.completed ? 'text-success' : 'text-muted'
-                    }`}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+            {/* Completion toggle (Custom Hidden Input + Styled Div) */}
+            <div 
+                className="checkbox-wrapper" 
+                onClick={() => !isEditing && toggleTask(task.id)}
             >
-                {task.completed ? (
-                    <CheckCircle size={22} fill="currentColor" fillOpacity={0.15} />
-                ) : (
-                    <Circle size={22} />
-                )}
-            </button>
+                <div className={`checkbox-custom ${task.completed ? 'checked' : ''}`}>
+                </div>
+            </div>
 
-            <span className={`flex-1 font-medium completed-text ${task.completed ? 'is-active' : ''}`}>
-                {task.text}
-            </span>
+            {isEditing ? (
+                <input
+                    ref={editInputRef}
+                    type="text"
+                    className="flex-1 font-medium bg-transparent border-none outline-none text-main"
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    onBlur={handleSave}
+                    style={{ padding: 0, margin: 0, fontSize: 'inherit' }}
+                />
+            ) : (
+                <div 
+                    className="flex-1 flex items-center gap-3 overflow-hidden"
+                    onDoubleClick={handleDoubleClick}
+                    title="Double-click to edit"
+                >
+                    <span className="task-text truncate">
+                        {task.text}
+                    </span>
+                    <span className={`tag tag-${task.category?.toLowerCase()} flex-shrink-0`}>
+                        {task.category || 'Personal'}
+                    </span>
+                </div>
+            )}
 
             {/* Action buttons */}
             <button
                 onClick={handleRemove}
-                className="btn-icon"
+                className="btn-icon btn-icon-danger"
                 title="Delete task"
+                disabled={isEditing}
+                style={{ opacity: isEditing ? 0.5 : 1 }}
             >
                 <Trash2 size={16} />
             </button>

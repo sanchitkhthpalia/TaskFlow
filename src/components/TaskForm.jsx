@@ -4,9 +4,13 @@ import { PlusCircle, AlertCircle } from 'lucide-react';
 
 export default function TaskForm() {
     const [text, setText] = useState('');
+    const [category, setCategory] = useState('Personal');
     const [error, setError] = useState(false);
     const { addTask } = useTasks();
     const inputRef = useRef(null);
+
+    // Categories list
+    const categories = ['Work', 'Personal', 'Learning'];
 
     // Auto-focus on mount
     useEffect(() => {
@@ -32,7 +36,7 @@ export default function TaskForm() {
             return;
         }
 
-        addTask(text.trim());
+        addTask(text.trim(), category);
         setText('');
         setError(false);
         
@@ -63,14 +67,26 @@ export default function TaskForm() {
     return (
         <div className="card" style={{ padding: '24px', marginBottom: '32px' }}>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <label className="text-muted" style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em'
-                }}>
-                    New Task
-                </label>
+                <div className="flex justify-between items-center">
+                    <label className="text-muted" style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                    }}>
+                        New Task
+                    </label>
+                    
+                    <select 
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        className="category-select"
+                    >
+                        {categories.map(cat => (
+                            <option key={cat} value={cat}>{cat}</option>
+                        ))}
+                    </select>
+                </div>
 
                 <div className="flex gap-4 stack-on-mobile">
                     <textarea
