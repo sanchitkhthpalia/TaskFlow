@@ -1,10 +1,35 @@
 import React, { memo, useState } from 'react';
 import { useTasks } from '../context/TaskContext';
 import { Trash2, GripVertical, CheckCircle, Circle } from 'lucide-react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
-const TaskItem = ({ task, provided, isDragging }) => {
+const TaskItem = ({ task }) => {
     const { toggleTask, deleteTask } = useTasks();
     const [isRemoving, setIsRemoving] = useState(false);
+
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging
+    } = useSortable({ id: task.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        padding: '16px 20px',
+        marginBottom: '12px',
+        userSelect: 'none',
+        zIndex: isDragging ? 999 : 1,
+        position: 'relative',
+        borderColor: isDragging ? 'var(--primary)' : 'var(--border-color)',
+        boxShadow: isDragging ? 'var(--shadow-lg)' : 'var(--shadow)',
+        background: isDragging ? 'var(--glass-bg)' : 'var(--card-bg)',
+        opacity: isDragging ? 0.8 : 1,
+    };
 
     // Smooth delete: allow animation to finish before removing from state
     const handleRemove = () => {
@@ -14,29 +39,21 @@ const TaskItem = ({ task, provided, isDragging }) => {
 
     return (
         <li
-            {...provided.draggableProps}
-            ref={provided.innerRef}
+            ref={setNodeRef}
+            style={style}
             className={`
-        card card-hover task-entry 
-        ${isRemoving ? 'task-exit' : ''} 
-        ${isDragging ? 'is-dragging' : ''} 
-        flex items-center gap-4
-      `}
-            style={{
-                ...provided.draggableProps.style,
-                padding: '16px 20px',
-                marginBottom: '12px',
-                userSelect: 'none',
-                // Dynamic drag styles
-                borderColor: isDragging ? 'var(--primary)' : 'var(--border-color)',
-                boxShadow: isDragging ? 'var(--shadow-lg)' : 'var(--shadow)',
-                background: isDragging ? 'var(--glass-bg)' : 'var(--card-bg)'
-            }}
+                card card-hover task-entry 
+                ${isRemoving ? 'task-exit' : ''} 
+                ${isDragging ? 'is-dragging' : ''} 
+                flex items-center gap-4
+            `}
         >
             {/* Drag handle */}
             <div
-                {...provided.dragHandleProps}
+                {...attributes}
+                {...listeners}
                 className="text-muted cursor-grab active:cursor-grabbing hover:text-main transition-colors"
+                style={{ display: 'flex', alignItems: 'center' }}
             >
                 <GripVertical size={18} />
             </div>

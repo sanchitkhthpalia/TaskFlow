@@ -1,20 +1,46 @@
 import React from 'react';
 import { useTasks } from '../context/TaskContext';
 import TaskItem from './TaskItem';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Sparkles } from 'lucide-react';
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 
 export default function TaskList() {
     const { filteredTasks, reorderTasks } = useTasks();
 
-    const handleDragStart = () => {
-        document.body.classList.add('is-dragging-active');
-    };
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5, // Prevent accidental drags when clicking toggle/delete
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
 
-    const handleDragEnd = (result) => {
-        document.body.classList.remove('is-dragging-active');
-        if (!result.destination) return;
-        reorderTasks(result.source.index, result.destination.index);
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+
+        if (active.id !== over?.id) {
+            const oldIndex = filteredTasks.findIndex((task) => task.id === active.id);
+            const newIndex = filteredTasks.findIndex((task) => task.id === over.id);
+
+            reorderTasks(oldIndex, newIndex);
+        }
     };
 
     if (filteredTasks.length === 0) {
@@ -45,34 +71,22 @@ export default function TaskList() {
     }
 
     return (
-        <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-            <Droppable droppableId="main-task-list">
-                {(provided, snapshot) => (
-                    <ul
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        style={{
-                            listStyle: 'none',
-                            padding: 0,
-                            minHeight: '20px',
-                            borderRadius: 'var(--radius)'
-                        }}
-                    >
-                        {filteredTasks.map((task, index) => (
-                            <Draggable key={task.id} draggableId={task.id} index={index}>
-                                {(provided, snapshot) => (
-                                    <TaskItem
-                                        task={task}
-                                        provided={provided}
-                                        isDragging={snapshot.isDragging}
-                                    />
-                                )}
-                            </Draggable>
-                        ))}
-                        {provided.placeholder}
-                    </ul>
-                )}
-            </Droppable>
-        </DragDropContext>
+        <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            modifiers={[restrictToVerticalAxis]}
+        >
+            <SortableContext
+                items={filteredTasks.map(t => t.id)}
+                strategy={verticalListSortingStrategy}
+            >
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                    {filteredTasks.map((task) => (
+                        <TaskItem key={task.id} task={task} />
+                    ))}
+                </ul>
+            </SortableContext>
+        </DndContext>
     );
 }

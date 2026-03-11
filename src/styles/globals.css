@@ -237,31 +237,8 @@ header {
 
 /* Critical for Smooth DND */
 .is-dragging {
-    transition: none !important;
-    transition-duration: 0ms !important;
-    animation: none !important;
-    /* Prevent slide animations from fighting drag position */
     z-index: 9999;
-    pointer-events: none;
     cursor: grabbing !important;
-}
-
-/* Ensure no transitions or transforms on parents interfere during an active drag session */
-body:has(.is-dragging) .dashboard-container,
-body:has(.is-dragging) main,
-body:has(.is-dragging) .card:not(.is-dragging),
-body.is-dragging-active .dashboard-container,
-body.is-dragging-active main,
-body.is-dragging-active .card:not(.is-dragging) {
-    transform: none !important;
-    animation: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    filter: none !important;
-}
-
-body:has(.is-dragging) .card {
-    transition: none !important;
 }
 
 /* Toast Notifications */
