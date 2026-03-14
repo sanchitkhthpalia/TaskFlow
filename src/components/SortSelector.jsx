@@ -9,6 +9,8 @@ const SortSelector = () => {
         { id: 'manual', label: 'Custom Order' },
         { id: 'newest', label: 'Newest First' },
         { id: 'oldest', label: 'Oldest First' },
+        { id: 'priority-high', label: 'Priority (High-Low)' },
+        { id: 'priority-low', label: 'Priority (Low-High)' },
         { id: 'completed', label: 'Completed First' },
         { id: 'pending', label: 'Pending First' },
     ];

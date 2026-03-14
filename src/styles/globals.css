@@ -440,6 +440,24 @@ header {
     border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
+.tag-priority-high {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.tag-priority-medium {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.tag-priority-low {
+    background: rgba(100, 116, 139, 0.1);
+    color: var(--text-muted);
+    border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
 /* Category Select */
 .category-select {
     background: var(--card-bg);

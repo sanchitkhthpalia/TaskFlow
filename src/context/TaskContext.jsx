@@ -37,11 +37,12 @@ export const TaskProvider = ({ children }) => {
         setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
     }, [setTheme]);
 
-    const addTask = useCallback((text, category = 'Personal') => {
+    const addTask = useCallback((text, category = 'Personal', priority = 'Medium') => {
         setTasks(prev => [{
             id: Date.now().toString(),
             text,
             category,
+            priority,
             completed: false,
             createdAt: Date.now()
         }, ...prev]);
@@ -161,11 +162,15 @@ export const TaskProvider = ({ children }) => {
 
         // 3. Apply Sorting
         if (sortOption !== 'manual') {
+            const priorityWeight = { 'High': 3, 'Medium': 2, 'Low': 1 };
+            
             results = [...results].sort((a, b) => {
                 if (sortOption === 'newest') return b.createdAt - a.createdAt;
                 if (sortOption === 'oldest') return a.createdAt - b.createdAt;
                 if (sortOption === 'completed') return (b.completed ? 1 : 0) - (a.completed ? 1 : 0);
                 if (sortOption === 'pending') return (a.completed ? 1 : 0) - (b.completed ? 1 : 0);
+                if (sortOption === 'priority-high') return (priorityWeight[b.priority] || 0) - (priorityWeight[a.priority] || 0);
+                if (sortOption === 'priority-low') return (priorityWeight[a.priority] || 0) - (priorityWeight[b.priority] || 0);
                 return 0;
             });
         }

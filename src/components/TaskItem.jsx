@@ -107,9 +107,14 @@ const TaskItem = ({ task }) => {
                     <span className="task-text truncate">
                         {task.text}
                     </span>
-                    <span className={`tag tag-${task.category?.toLowerCase()} flex-shrink-0`}>
-                        {task.category || 'Personal'}
-                    </span>
+                    <div className="flex gap-2 flex-shrink-0">
+                        <span className={`tag tag-priority-${task.priority?.toLowerCase()} flex-shrink-0`}>
+                            {task.priority || 'Medium'}
+                        </span>
+                        <span className={`tag tag-${task.category?.toLowerCase()} flex-shrink-0 text-muted`}>
+                            {task.category || 'Personal'}
+                        </span>
+                    </div>
                 </div>
             )}
 

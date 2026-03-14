@@ -5,12 +5,15 @@ import { PlusCircle, AlertCircle } from 'lucide-react';
 export default function TaskForm() {
     const [text, setText] = useState('');
     const [category, setCategory] = useState('Personal');
+    const [priority, setPriority] = useState('Medium');
     const [error, setError] = useState(false);
     const { addTask } = useTasks();
     const inputRef = useRef(null);
+    const [errorMsg, setErrorMsg] = useState('');
 
     // Categories list
     const categories = ['Work', 'Personal', 'Learning'];
+    const priorities = ['High', 'Medium', 'Low'];
 
     // Auto-focus on mount
     useEffect(() => {
@@ -33,13 +36,24 @@ export default function TaskForm() {
 
         if (!text.trim()) {
             setError(true);
+            setErrorMsg('Task text cannot be empty.');
+            return;
+        }
+        if (text.trim().length < 6) {
+            setError(true);
+            setErrorMsg('Task must be atleast 6 characters');
+            return;
+        }
+        if (text.trim().length > 12) {
+            setError(true);
+            setErrorMsg('Task cannot be more than 12 characters');
             return;
         }
 
-        addTask(text.trim(), category);
+        addTask(text.trim(), category, priority);
         setText('');
         setError(false);
-        
+
         // Keep focus and reset height
         if (inputRef.current) {
             inputRef.current.focus();
@@ -53,7 +67,7 @@ export default function TaskForm() {
             e.preventDefault();
             handleSubmit();
         }
-        
+
         // Clear input on Escape
         if (e.key === 'Escape') {
             setText('');
@@ -76,16 +90,32 @@ export default function TaskForm() {
                     }}>
                         New Task
                     </label>
-                    
-                    <select 
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        className="category-select"
-                    >
-                        {categories.map(cat => (
-                            <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                    </select>
+
+                    <div className="flex gap-2">
+                        <select
+                            value={priority}
+                            onChange={(e) => setPriority(e.target.value)}
+                            className="category-select"
+                            style={{ 
+                                borderColor: priority === 'High' ? '#ef4444' : priority === 'Medium' ? 'var(--primary)' : 'var(--text-muted)',
+                                color: priority === 'High' ? '#ef4444' : 'inherit'
+                            }}
+                        >
+                            {priorities.map(p => (
+                                <option key={p} value={p}>{p} Priority</option>
+                            ))}
+                        </select>
+
+                        <select
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                            className="category-select"
+                        >
+                            {categories.map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
 
                 <div className="flex gap-4 stack-on-mobile">
@@ -101,8 +131,8 @@ export default function TaskForm() {
                             if (error) setError(false);
                         }}
                         onKeyDown={handleKeyDown}
-                        style={{ 
-                            resize: 'none', 
+                        style={{
+                            resize: 'none',
                             overflow: 'hidden',
                             minHeight: '48px',
                             lineHeight: '1.5',
@@ -122,7 +152,7 @@ export default function TaskForm() {
                 {error && (
                     <div className="flex items-center gap-2 task-entry" style={{ color: 'var(--danger)', fontSize: '0.85rem' }}>
                         <AlertCircle size={14} />
-                        <span>Task text cannot be empty.</span>
+                        <span>{errorMsg}</span>
                     </div>
                 )}
             </form>
